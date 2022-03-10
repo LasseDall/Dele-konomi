@@ -93,7 +93,8 @@ public class Main {
         System.out.println("4. Lån ting");
         System.out.println("5. Aflever ting");
         System.out.println("6. Se dine ting");
-        System.out.println("7. Log ud");
+        System.out.println("7. Fjern udlån");
+        System.out.println("8. Log ud");
         valgHovedMenu();
     }
 
@@ -128,23 +129,74 @@ public class Main {
             String seek = scanner.nextLine();
             seek = scanner.nextLine();
             Item found = catalogue.findItem(seek);
-            catalogue.borrowItem(found);
-            found.setBorrowUser(logedInUser);
+            if (found != null) {
+                if (found.getAvailable() == true) {
+                    catalogue.borrowItem(found);
+                    found.setBorrowUser(logedInUser);
+                } else if (found.getAvailable() == false) {
+                    System.out.println("Denne genstand er ikke tilgænglig for udlån i øjeblikket.");
+                    System.out.println(" ");
+                }
+            } else {
+                System.out.println("Der er ikke nogen ting, der matcher beskrivelsen.");
+                System.out.println(" ");
+            }
         } else if (choice == 5) {
             System.out.println("Hvad vil du returnere?");
             String returning = scanner.nextLine();
             returning = scanner.nextLine();
             Item found = catalogue.findItem(returning);
             catalogue.returnItem(found);
-            found.setBorrowUser(null);
-        } else if (choice == 6) {
+            if (found.getOwnerWantItemBack() == true) {
+                found.setBorrowUser(found.getOwner());
+                found.setAvailable(false);
+            } else {
+                found.setBorrowUser(null);
+            }
+            } else if (choice == 6) {
             Item[] yourItems = findYourItems(logedInUser);
             for (int i = 0; i < yourItems.length; i++) {
                 if (yourItems[i] != null) {
                     System.out.println(yourItems[i]);
                 }
             }
-        }else if (choice == 7) {
+        } else if (choice == 7) {
+            System.out.println("Hvad ønsker du, at gøre utilgængligt?");
+            String description = scanner.nextLine();
+            description = scanner.nextLine();
+            Item[] allItems = catalogue.getFullList();
+            boolean foundItem = false;
+            for (int i = 0; i < catalogue.getFullList().length; i++) {
+                if (allItems[i] != null) {
+                    if (description.equals(allItems[i].getDescription()) && logedInUser == allItems[i].getOwner()) {
+                        if (allItems[i].getAvailable() == true) {
+                            allItems[i].setAvailable(false);
+                            allItems[i].setBorrowUser(logedInUser);
+                            System.out.println(allItems[i].getDescription() + " er nu gjort utilgængelig for udlån.");
+                            System.out.println(" ");
+                            foundItem = true;
+                            break;
+                        } else {
+                            System.out.println("Denne ting er i øjeblikket udlånt.");
+                            System.out.println("Den vil blive gjort utilgænglig for yderligere udlån, når den indleveres.");
+                            System.out.println(" ");
+                            allItems[i].setOwnerWantItemBack(true);
+                            foundItem = true;
+                            break;
+                        }
+                    } else if (description.equals(allItems[i].getDescription())) {
+                        System.out.println("Dette er ikke din ting");
+                        System.out.println(" ");
+                        foundItem = true;
+                        break;
+                    }
+                }
+            }
+            if (foundItem == false) {
+                System.out.println("Der er ikke nogen ting, der matcher beskrivelsen.");
+                System.out.println(" ");
+            }
+        } else if (choice == 8) {
             logedInUser = null;
             startMenu();
         } else {
