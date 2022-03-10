@@ -5,7 +5,7 @@ public class Item {
   private String catagory;
   private String description;
   private boolean available;
-  private User owner;
+  private final User owner;
   private User borrowUser;
   private boolean ownerWantItemBack;
 
