@@ -11,6 +11,16 @@ public class Main {
 
     Scanner scanner = new Scanner(System.in);
 
+    User logedInUser = null;
+
+    User borrowUser = null;
+
+    User user1 = new User("Lasse Dall Mikkelsen", "Lasse", "1234");
+    User user2 = new User("Jens Jensen", "Jens", "Jensen123");
+    User user3 = new User("Mathilde Pedersen", "Mathilde", "entotre");
+    User user4 = new User("Gertrud Gertrudsen", "Gertrud", "gertrud");
+    User user5 = new User("Jens Larsen", "Jens2", "Lars3");
+
     public void startMenu() {
         System.out.println("1. Log ind med eksisterende bruger");
         System.out.println("2. Opret bruger");
@@ -42,6 +52,7 @@ public class Main {
             String passWord = scanner.nextLine();
             if (passWord.equals(user.getPassWord())) {
                 System.out.println("Hej " + user.getFullName());
+                logedInUser = user;
                 hovedMenu();
             } else {
                 System.out.println("Forkert adgangskode");
@@ -54,16 +65,23 @@ public class Main {
     }
 
     public void newUser() {
+        Boolean userNameRegistered = false;
         System.out.println("Indtast fuldt navn:");
         String fullName = scanner.nextLine();
         fullName = scanner.nextLine();
-        System.out.println("Indtast ønskede brugernavn:");
-        String userName = scanner.nextLine();
-        System.out.println("Indtast adganskode:");
-        String passWord = scanner.nextLine();
-        User user = new User(fullName, userName, passWord);
-        list.addUser(user);
-        System.out.println("Velkommen " + fullName);
+        do {
+            System.out.println("Indtast ønskede brugernavn:");
+            String userName = scanner.nextLine();
+            if (list.findUser(userName) == null) {
+                System.out.println("Indtast adganskode:");
+                String passWord = scanner.nextLine();
+                User user = new User(fullName, userName, passWord);
+                list.addUser(user);
+                System.out.println("Velkommen " + fullName);
+            } else {
+                System.out.println("Det ønskede brugernavn er allerede i brug.");
+            }
+        } while (userNameRegistered == false);
         hovedMenu();
     }
 
@@ -74,7 +92,8 @@ public class Main {
         System.out.println("3. Opret ting til udlån");
         System.out.println("4. Lån ting");
         System.out.println("5. Aflever ting");
-        System.out.println("6. Log ud");
+        System.out.println("6. Se dine ting");
+        System.out.println("7. Log ud");
         valgHovedMenu();
     }
 
@@ -100,7 +119,7 @@ public class Main {
             catagory = scanner.nextLine();
             System.out.println("Tilføj beskrivelse til objektet: ");
             String description = scanner.nextLine();
-            catalogue.addItem(new Item(catagory, description));
+            catalogue.addItem(new Item(catagory, description, logedInUser, null));
             System.out.println("Tak fordi du vil udlåne din " + description + ".");
             System.out.println("Den er nu gjort tilgænglig for udlån.");
             System.out.println(" ");
@@ -110,13 +129,18 @@ public class Main {
             seek = scanner.nextLine();
             Item found = catalogue.findItem(seek);
             catalogue.borrowItem(found);
+            found.setBorrowUser(logedInUser);
         } else if (choice == 5) {
             System.out.println("Hvad vil du returnere?");
             String returning = scanner.nextLine();
             returning = scanner.nextLine();
             Item found = catalogue.findItem(returning);
             catalogue.returnItem(found);
+            found.setBorrowUser(null);
         } else if (choice == 6) {
+
+        }else if (choice == 7) {
+            logedInUser = null;
             startMenu();
         } else {
             System.out.println("Du foretog et ugyldigt valg.");
@@ -124,29 +148,36 @@ public class Main {
         hovedMenu();
     }
 
+
+
     public static void main(String[] args) {
 	// write your code here
         Main obj = new Main();
-        Item item1 = new Item("Sport", "Skateboard");
+        Item item1 = new Item("Sport", "Skateboard", obj.user1, null);
         obj.catalogue.addItem(item1);
-        Item item2 = new Item("Sport", "Mountainbike");
+        Item item2 = new Item("Sport", "Mountainbike", obj.user2, null);
         obj.catalogue.addItem(item2);
-        Item item3 = new Item("Tøj", "Smoking");
+        Item item3 = new Item("Tøj", "Smoking", obj.user1, null);
         obj.catalogue.addItem(item3);
-        Item item4 = new Item("Tøj", "Pailletkjole");
+        Item item4 = new Item("Tøj", "Pailletkjole", obj.user3, null);
         obj.catalogue.addItem(item4);
-        Item item5 = new Item("Møbel", "Stol");
+        Item item5 = new Item("Møbel", "Stol", obj.user4, null);
         obj.catalogue.addItem(item5);
-        Item item6 = new Item("Møbel", "Bord");
+        Item item6 = new Item("Møbel", "Bord", obj.user4, null);
         obj.catalogue.addItem(item6);
-        Item item7 = new Item("Møbel", "Sofa");
+        Item item7 = new Item("Møbel", "Sofa", obj.user4, null);
         obj.catalogue.addItem(item7);
-        Item item8 = new Item("Køkken", "Kniv");
+        Item item8 = new Item("Køkken", "Kniv", obj.user3, null);
         obj.catalogue.addItem(item8);
-        Item item9 = new Item("Køkken", "Elpisker");
+        Item item9 = new Item("Køkken", "Elpisker", obj.user2, null);
         obj.catalogue.addItem(item9);
-        Item item10 = new Item("Køkken", "Ismaskine");
+        Item item10 = new Item("Køkken", "Ismaskine", obj.user5, null);
         obj.catalogue.addItem(item10);
+        obj.list.addUser(obj.user1);
+        obj.list.addUser(obj.user2);
+        obj.list.addUser(obj.user3);
+        obj.list.addUser(obj.user4);
+        obj.list.addUser(obj.user5);
 
         obj.startMenu();
 

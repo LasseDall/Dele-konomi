@@ -4,10 +4,11 @@ public class Catalogue {
   private Item[] list;
 
   public Catalogue(int size) {
-     list = new Item[size];
+    list = new Item[size];
   }
 
   int addItemCount = 0;
+
   public void addItem(Item item) {
     list[addItemCount] = item;
     addItemCount++;
@@ -29,7 +30,7 @@ public class Catalogue {
   public void borrowItem(Item description) {
     Item borrowItem = null;
     for (int i = 0; i < list.length; i++) {
-      if (list[i] != null){
+      if (list[i] != null) {
         if (list[i].equals(description)) {
           borrowItem = list[i];
           break;
@@ -41,7 +42,7 @@ public class Catalogue {
       System.out.println("Du har lånt følgende: " + description.getDescription());
       System.out.println(" ");
     } else {
-      System.out.println("Beskrivelsen matchede ikke nogle genstande til udlån.");
+      System.out.println("Beskrivelsen matchede ikke nogen genstande til udlån.");
       System.out.println(" ");
     }
   }
@@ -50,8 +51,8 @@ public class Catalogue {
     Item returnItem = null;
     for (int i = 0; i < list.length; i++) {
       if (description.equals(list[i])) {
-          returnItem = list[i];
-          break;
+        returnItem = list[i];
+        break;
       }
     }
     if (returnItem != null) {
@@ -72,11 +73,11 @@ public class Catalogue {
     int count = 0;
     Item[] availableItems = new Item[list.length];
     for (int i = 0; i < list.length; i++) {
-      if (list[i] != null){
+      if (list[i] != null) {
         if (list[i].getAvailable() == true) {
-         availableItems[count] = list[i];
-         count++;
-         }
+          availableItems[count] = list[i];
+          count++;
+        }
       }
     }
     return availableItems;

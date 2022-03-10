@@ -5,18 +5,24 @@ public class Item {
   private String catagory;
   private String description;
   private boolean available;
+  private User owner;
+  private User borrowUser;
 
-  public Item(String catagory, String description, boolean available) {
+  public Item(String catagory, String description, User owner, boolean available) {
     this.catagory = catagory;
     this.description = description;
     this.available = available;
+    this.owner = owner;
   }
 
-  public Item(String catagory, String description) {
+  public Item(String catagory, String description, User owner, User borrowUser) {
     this.catagory = catagory;
     this.description = description;
     available = true;
+    this.owner = owner;
+    this.borrowUser = borrowUser;
   }
+
 
   public void setCatagory(String catagory) {
     this.catagory = catagory;
@@ -28,6 +34,10 @@ public class Item {
 
   public void setAvailable(boolean available) {
     this.available = available;
+  }
+
+  public void setBorrowUser(User borrowuser) {
+    this.borrowUser = borrowuser;
   }
 
   public String getCatagory() {
@@ -44,13 +54,14 @@ public class Item {
 
   public String toString() {
     String availableString;
-    if (available == true) {
+    if (available) {
       availableString = "Denne ting er åben for udlån";
     } else {
-      availableString = "Denne ting er udlånt";
+      availableString = "Denne ting er udlånt til " + borrowUser.getFullName();
     }
-    return "Catagory: " + catagory + '\n' +
-        "Description: " + description + '\n' +
+    return "Katagori: " + catagory + '\n' +
+        "Beskrivelse: " + description + '\n' +
+        "Ejer: " + owner.getFullName() + '\n' +
         availableString + '\n' + '\n';
   }
 }
