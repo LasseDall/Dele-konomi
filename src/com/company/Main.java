@@ -4,27 +4,33 @@ import java.util.Scanner;
 
 public class Main {
 
+    //Opret katalog og brugerliste
     Catalogue catalogue = new Catalogue(1000);
 
     UserList list = new UserList();
 
+    //Opret scanner
     Scanner scanner = new Scanner(System.in);
 
+    //Definér den aktive bruger
     User loggedInUser = null;
 
+    //Opret brugere
     User user1 = new User("Lasse Dall Mikkelsen", "Lasse", "1234");
     User user2 = new User("Jens Jensen", "Jens", "Jensen123");
     User user3 = new User("Mathilde Pedersen", "Mathilde", "entotre");
     User user4 = new User("Gertrud Gertrudsen", "Gertrud", "gertrud");
     User user5 = new User("Jens Larsen", "Jens2", "Lars3");
 
-    public void startMenu() {
+    //Vis startmenu
+    public void displayStartMenu() {
         System.out.println("1. Log ind med eksisterende bruger");
         System.out.println("2. Opret bruger");
         System.out.println("3. Exit");
         valgStartMenu();
     }
 
+    //Videresend bruger efter valg i startmenu
     public void valgStartMenu() {
         int choice = scanner.nextInt();
         if (choice == 1) {
@@ -35,10 +41,11 @@ public class Main {
             System.exit(0);
         } else {
             System.out.println("Du foretog et ugyldigt valg.");
-            startMenu();
+            displayStartMenu();
         }
     }
 
+    //Log ind med eksisterende bruger
     public void logOn() {
         System.out.println("Indtast brugernavn:");
         scanner.nextLine();
@@ -50,7 +57,7 @@ public class Main {
             if (passWord.equals(user.getPassWord())) {
                 System.out.println("Hej " + user.getFullName());
                 loggedInUser = user;
-                hovedMenu();
+                displayHovedMenu();
             } else {
                 System.out.println("Forkert adgangskode");
                 logOn();
@@ -61,6 +68,7 @@ public class Main {
         }
     }
 
+    //Opret ny bruger
     public void newUser() {
         boolean userNameRegistered = false;
         System.out.println("Indtast fuldt navn:");
@@ -82,10 +90,11 @@ public class Main {
             }
         } while (!userNameRegistered);
         loggedInUser = user;
-        hovedMenu();
+        displayHovedMenu();
     }
 
-    public void hovedMenu() {
+    //Vis hovedmenu
+    public void displayHovedMenu() {
         System.out.println("Hvad kunne du tænke dig?");
         System.out.println("1. Se hele kataloget");
         System.out.println("2. Se hvad der er ledigt");
@@ -114,10 +123,11 @@ public class Main {
             logOut();
         } else {
         System.out.println("Du foretog et ugyldigt valg.");
-        hovedMenu();
+        displayHovedMenu();
         }
     }
 
+    //Vis hele kataloget
     public void displayFullList(){
         Item[] allItems = catalogue.getFullList();
         for (int i = 0; i < allItems.length; i++) {
@@ -125,9 +135,10 @@ public class Main {
                 System.out.println(allItems[i]);
             }
         }
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Vis tilgængellige ting
     public void displayAvailableList() {
         Item[] availableItems = catalogue.getAvailableItems();
         for (int i = 0; i < availableItems.length; i++) {
@@ -135,9 +146,10 @@ public class Main {
                 System.out.println(availableItems[i]);
             }
         }
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Tilføj ting til udlån
     public void addItemToList() {
         System.out.println("Hviken katagori tilhører objektet du ønsker at udlåne?");
         String catagory = scanner.nextLine();
@@ -148,9 +160,10 @@ public class Main {
         System.out.println("Tak fordi du vil udlåne din " + description + ".");
         System.out.println("Den er nu gjort tilgænglig for udlån.");
         System.out.println(" ");
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Lån ting fra katalog
     public void borrowItem() {
         System.out.println("Hvad ønsker du at låne?");
         String seek = scanner.nextLine();
@@ -164,25 +177,32 @@ public class Main {
                 System.out.println("Denne genstand er ikke tilgænglig for udlån i øjeblikket.");
                 System.out.println(" ");
             }
+        } else {
+            System.out.println("Der er ikke nogen ting, der matcher beskrivelsen.");
+            System.out.println(" ");
         }
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Aflevér ting
     public void returnItem() {
         System.out.println("Hvad vil du returnere?");
         String returning = scanner.nextLine();
         returning = scanner.nextLine();
         Item found = catalogue.findItem(returning);
         catalogue.returnItem(found);
-        if (found.getOwnerWantItemBack()) {
-            found.setBorrowUser(found.getOwner());
-            found.setAvailable(false);
-        } else {
-            found.setBorrowUser(null);
+        if (found != null) {
+            if (found.getOwnerWantItemBack()) {
+                found.setBorrowUser(found.getOwner());
+                found.setAvailable(false);
+            } else {
+                found.setBorrowUser(null);
+            }
         }
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Vis aktive brugers ting til udlån
     public void displayYourItems() {
         Item[] yourItems = findYourItems();
         for (int i = 0; i < yourItems.length; i++) {
@@ -190,7 +210,7 @@ public class Main {
                 System.out.println(yourItems[i]);
             }
         }
-        hovedMenu();
+        displayHovedMenu();
     }
 
     public void removeItem() {
@@ -219,15 +239,16 @@ public class Main {
             System.out.println("Der er ikke nogen ting, der matcher beskrivelsen.");
             System.out.println(" ");
             }
-        hovedMenu();
-        }
-
-    public void logOut() {
-        loggedInUser = null;
-        startMenu();
-        hovedMenu();
+        displayHovedMenu();
     }
 
+    //Log aktive bruger ud
+    public void logOut() {
+        loggedInUser = null;
+        displayStartMenu();
+    }
+
+    //Metode til at finde aktive brugers ting til udlån
     public Item[] findYourItems() {
         Item[] allItems = catalogue.getFullList();
         Item[] yourItems = new Item[catalogue.getFullList().length];
@@ -244,7 +265,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-	// write your code here
+	// Oprettelse af objekt, ting til udlån og tilføjelse af bruger til brugerliste.
         Main obj = new Main();
         Item item1 = new Item("Sport", "Skateboard", obj.user1, null);
         obj.catalogue.addItem(item1);
@@ -272,7 +293,8 @@ public class Main {
         obj.list.addUser(obj.user4);
         obj.list.addUser(obj.user5);
 
-        obj.startMenu();
+        //Start program
+        obj.displayStartMenu();
 
     }
 }

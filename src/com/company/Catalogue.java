@@ -1,19 +1,26 @@
 package com.company;
 
 public class Catalogue {
+
+  //Definer attribut
   private Item[] list;
 
+  //Konstruktørmetode
   public Catalogue(int size) {
     list = new Item[size];
   }
 
-  int addItemCount = 0;
-
+  //Tilføj ting til liste
   public void addItem(Item item) {
-    list[addItemCount] = item;
-    addItemCount++;
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] == null) {
+        list[i] = item;
+        break;
+      }
+    }
   }
 
+  //Find ting ud fra beskrivelse
   public Item findItem(String description) {
     Item foundItem = null;
     for (int i = 0; i < list.length; i++) {
@@ -27,6 +34,7 @@ public class Catalogue {
     return foundItem;
   }
 
+  //Lån ting
   public void borrowItem(Item description) {
     Item borrowItem = null;
     for (int i = 0; i < list.length; i++) {
@@ -47,16 +55,10 @@ public class Catalogue {
     }
   }
 
+  //Returner ting
   public void returnItem(Item description) {
-    Item returnItem = null;
-    for (int i = 0; i < list.length; i++) {
-      if (description.equals(list[i])) {
-        returnItem = list[i];
-        break;
-      }
-    }
-    if (returnItem != null) {
-      returnItem.setAvailable(true);
+    if (description != null) {
+      description.setAvailable(true);
       System.out.println("Tak for returneringen af: " + description.getDescription());
       System.out.println(" ");
     } else {
@@ -65,10 +67,12 @@ public class Catalogue {
     }
   }
 
+  //Getmetode
   public Item[] getFullList() {
     return list;
   }
 
+  //Find tilgængelige ting
   public Item[] getAvailableItems() {
     int count = 0;
     Item[] availableItems = new Item[list.length];

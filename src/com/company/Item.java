@@ -2,6 +2,7 @@ package com.company;
 
 public class Item {
 
+  //Definér attributter
   private String catagory;
   private String description;
   private boolean available;
@@ -9,6 +10,7 @@ public class Item {
   private User borrowUser;
   private boolean ownerWantItemBack;
 
+  //Konstruktørmetode
   public Item(String catagory, String description, User owner, User borrowUser) {
     this.catagory = catagory;
     this.description = description;
@@ -19,6 +21,7 @@ public class Item {
   }
 
 
+  //Setmetoder
   public void setCatagory(String catagory) {
     this.catagory = catagory;
   }
@@ -39,6 +42,7 @@ public class Item {
     this.ownerWantItemBack = ownerWantItemBack;
   }
 
+  //Getmetoder
   public boolean getOwnerWantItemBack() {
     return ownerWantItemBack;
   }
@@ -59,6 +63,7 @@ public class Item {
     return owner;
   }
 
+  //Til tekst
   public String toString() {
     String availableString;
     if (available) {
