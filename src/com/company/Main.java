@@ -138,7 +138,12 @@ public class Main {
             catalogue.returnItem(found);
             found.setBorrowUser(null);
         } else if (choice == 6) {
-
+            Item[] yourItems = findYourItems(logedInUser);
+            for (int i = 0; i < yourItems.length; i++) {
+                if (yourItems[i] != null) {
+                    System.out.println(yourItems[i]);
+                }
+            }
         }else if (choice == 7) {
             logedInUser = null;
             startMenu();
@@ -148,7 +153,20 @@ public class Main {
         hovedMenu();
     }
 
-
+    public Item[] findYourItems(User owner) {
+        Item[] allItems = catalogue.getFullList();
+        Item[] yourItems = new Item[catalogue.getFullList().length];
+        int ownerCount = 0;
+        for (int i = 0; i < catalogue.getFullList().length; i++) {
+            if (allItems[i] != null) {
+                if (allItems[i].getOwner() == logedInUser) {
+                    yourItems[ownerCount] = allItems[i];
+                    ownerCount++;
+                }
+            }
+        }
+        return yourItems;
+    }
 
     public static void main(String[] args) {
 	// write your code here

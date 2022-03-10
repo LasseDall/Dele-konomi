@@ -52,6 +52,10 @@ public class Item {
     return available;
   }
 
+  public User getOwner() {
+    return owner;
+  }
+
   public String toString() {
     String availableString;
     if (available) {
